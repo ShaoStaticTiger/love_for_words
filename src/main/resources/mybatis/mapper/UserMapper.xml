@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sjh.love_for_words.mapper.UserMapper">
+    <insert id="addUser">
+        insert user (username,password) values (#{username},#{password});
+    </insert>
+    <update id="createTable">
+CREATE TABLE words_${username}  (
+  `word` varchar(255)  NOT NULL,
+  `chinese` varchar(255)  NOT NULL,
+  `total_times` bigint(5) NOT NULL DEFAULT 0,
+  `last_time` datetime(6) ,
+  `accuracy` int(2)  NOT NULL DEFAULT 0,
+  `wrong_times` int(5)  NOT NULL DEFAULT 0,
+  PRIMARY KEY (`word`) USING BTREE
+) ENGINE = InnoDB;
+    </update>
+    <select id="findByUser" resultType="com.sjh.love_for_words.bean.User">
+        select * from user where username = #{username};
+    </select>
+</mapper>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="" th:href="@{/layui/css/layui.css}"/>
+    <script src="" th:src="@{/jQuery/jquery-3.4.1.js}"></script>
+    <script src="" th:src="@{/layui/layui.js}"></script>
+</head>
+<body>
+<div th:replace="common/bar::topbar"></div>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div class="layui-row ">
+    <div class="layui-col-lg3 layui-col-lg-offset4">
+        <form class="layui-form" action="" th:action="@{/add}" method="post">
+            <div class="layui-card">
+                <center>
+                    <div id="chinese"></div>
+                </center>
+            </div>
+            <input class="layui-input" type="text" id="english" placeholder="请输入英文"/>
+            <br>
+        </form>
+        <div class="layui-row">
+            <div class="layui-col-lg10 layui-col-lg-offset2">
+                <button class="layui-btn layui-btn-warm" onclick="check()" name="提交">
+                    提交
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function homeClicked() {
+        document.getElementById('toreview').classList.add('layui-this');
+    }
+
+    homeClicked();
+</script>
+<script>
+    var word;
+    function getAWord() {
+        $.ajax({
+            url: "[[@{/review}]]",
+            type: "post",
+            success: function (data) {
+                if (data === "undefined" || data === ""){
+                    alert("数据库中没有新的单词，请先添加");
+                    return;
+                }
+                word = data;
+                document.getElementById("chinese").innerHTML = data.chinese;
+            }
+        })
+    }
+    function check() {
+        var myword = $("#english").val();
+        console.log(myword);
+        if (word.word === myword){
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.msg('答对咯！', {icon: 1});
+            });
+            $.ajax({
+                url: "[[@{/check?word=}]]"+word.word+"&&result=true",
+                type: "post"
+            })
+        }else {
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.alert(word.word, {icon: 2});
+            });
+            $.ajax({
+                url: "[[@{/check?word=}]]"+word.word+"&&result=false",
+                type: "post"
+            })
+        }
+        document.getElementById("english").value = "";
+        getAWord();
+    }
+    getAWord();
+</script>
+</body>
+</html>

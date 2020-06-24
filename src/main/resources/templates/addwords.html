@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加单词</title>
+    <link rel="stylesheet" type="text/css" href="" th:href="@{/layui/css/layui.css}"/>
+</head>
+<body>
+<div style="height: 200px">
+    <div th:replace="common/bar::topbar"></div>
+<!--    <ul class="layui-nav" lay-filter="">-->
+<!--        <li class="layui-nav-item"><a href="" th:href="@{/}">首页</a></li>-->
+<!--        <li class="layui-nav-item layui-this"><a href="" th:href="@{/toadd}">添加单词</a></li>-->
+<!--        <li class="layui-nav-item"><a href="" th:href="@{/toupdate}">更新单词</a></li>-->
+<!--        <li class="layui-nav-item"><a href="">单词回顾</a></li>-->
+<!--    </ul>-->
+</div>
+<div class="layui-row ">
+    <div class="layui-col-lg3 layui-col-lg-offset4">
+        <form class="layui-form" action="" th:action="@{/add}" method="post">
+            <center>
+                <i class="layui-icon layui-icon-face-smile" style="font-size: 20px; color: #393D49;" th:remove="${not #strings.isEmpty(msg)}?all">
+                    欢迎添加新单词！
+                </i>
+                <i class="layui-icon layui-icon-face-smile" style="font-size: 20px; color: green;" th:remove="${msg!='right'}?all">
+                    添加成功！
+                </i>
+                <i class="layui-icon layui-icon-face-surprised" style="font-size: 20px; color: red;" th:remove="${msg!='wrong'}?all">
+                    啊偶，这个单词已经添加过了哟！
+                </i>
+            </center>
+            <br>
+            <br>
+            <input class="layui-input" type="text" name="word" placeholder="请输入单词"/>
+            <br>
+            <input class="layui-input" type="text" name="chinese" placeholder="请输入中文"/>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-lg3 layui-col-lg-offset4">
+                    <input class="layui-btn" type="submit" name="提交">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    function homeClicked() {
+        document.getElementById('toadd').classList.add('layui-this');
+    }
+    homeClicked();
+</script>
+</body>
+</html>

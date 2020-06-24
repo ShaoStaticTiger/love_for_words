@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div  th:fragment="topbar">
+    <ul class="layui-nav" lay-filter="">
+        <li class="layui-nav-item" id="home"><a href="" th:href="@{/}">首页</a></li>
+        <li class="layui-nav-item" id="toadd"><a href="" th:href="@{/toadd}">添加单词</a></li>
+        <li class="layui-nav-item" id="toupdate"><a href="" th:href="@{/toupdate}">更新单词</a></li>
+        <li class="layui-nav-item" id="toreview"><a href="" th:href="@{/toreview}">单词回顾</a></li>
+    </ul>
+
+</div>
+</body>
+</html>

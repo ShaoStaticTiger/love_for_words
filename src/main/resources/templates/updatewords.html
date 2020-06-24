@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>更新单词</title>
+    <link rel="stylesheet" type="text/css" href="" th:href="@{/layui/css/layui.css}"/>
+</head>
+<div style="height: 200px">
+<!--    <ul class="layui-nav" lay-filter="">-->
+<!--        <li class="layui-nav-item"><a href="" th:href="@{/}">首页</a></li>-->
+<!--        <li class="layui-nav-item"><a href="" th:href="@{/toadd}">添加单词</a></li>-->
+<!--        <li class="layui-nav-item layui-this"><a href="" th:href="@{/toupdate}">更新单词</a></li>-->
+<!--        <li class="layui-nav-item"><a href="">单词回顾</a></li>-->
+<!--    </ul>-->
+    <div th:replace="common/bar::topbar"></div>
+</div>
+<div class="layui-row ">
+    <div class="layui-col-lg3 layui-col-lg-offset4">
+        <form class="layui-form" action="" th:action="@{/add}" method="post">
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <input class="layui-input" id="word" type="text" name="word" onchange="doVerify()" placeholder="请输入单词"/>
+            <br>
+            <input class="layui-input" type="text" name="chinese" placeholder="请输入中文"/>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-lg10 layui-col-lg-offset2">
+                    <button class="layui-btn layui-btn-warm" type="submit" name="提交">
+                        更新
+                    </button>
+                    <button class="layui-btn layui-btn-danger" type="submit" name="删除">
+                        删除
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="" th:src="@{/jQuery/jquery-3.4.1.js}"></script>
+<script src="" th:src="@{/layui/layui.js}"></script>
+<script type="text/javascript">
+    function doVerify(){
+        //获取界面的账号
+        var word =  $("#word").val();
+        if(word !=""){
+            $.ajax({
+                url:"[[@{/find?word=}]]"+word,//后台查询验证的方法
+                type: "post",
+                success: function(data){
+                    //根据后台返回前台的msg给提示信息加HTML
+                    console.log(data);
+                    if(data == "无结果"){
+                        // 账号已经存在
+                        layui.use('layer', function(){
+                            var layer = layui.layer;
+
+                            layer.msg('数据库中未查询的此单词',function(){
+                                //do something
+                            });
+                        });
+                    }
+                    else if (data != null){
+                        layui.use('layer', function(){
+                            var layer = layui.layer;
+                            layer.msg(data, {icon: 1});
+                        });
+                    }
+                }
+            });
+        }
+    }
+</script>
+<script>
+    function homeClicked() {
+        document.getElementById('toupdate').classList.add('layui-this');
+    }
+    homeClicked();
+</script>
+</head>
+</html>

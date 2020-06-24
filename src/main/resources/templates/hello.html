@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>云单词本</title>
+    <link rel="stylesheet" type="text/css" href="" th:href="@{/layui/css/layui.css}"/>
+    <style>
+        #test1{
+            height: 100%;
+        }
+    </style>
+</head>
+<body style="height: 100%;">
+<div style="height: 100%">
+    <div style="position: fixed;z-index: 100;width: 100%">
+        <div th:replace="common/bar::topbar"></div>
+        <!--        <ul class="layui-nav" lay-filter="">-->
+<!--            <li class="layui-nav-item layui-this"><a href="" th:href="@{/}">首页</a></li>-->
+<!--            <li class="layui-nav-item"><a href="" th:href="@{/toadd}">添加单词</a></li>-->
+<!--            <li class="layui-nav-item"><a href="" th:href="@{/toupdate}">更新单词</a></li>-->
+<!--            <li class="layui-nav-item"><a href="">单词回顾</a></li>-->
+<!--        </ul>-->
+    </div>
+    <div style="position: fixed;z-index: 100;right: 20%;top:40%;" >
+        <div th:remove="${#strings.isEmpty(session.username)}?all">
+            <div class="layui-card">
+                <div class="layui-card-header">欢迎!
+                </div>
+                <div class="layui-card-body">
+                    尊敬的用户：[[${session.username}]]
+                    &nbsp;&nbsp;
+                    <button class="layui-btn layui-btn-danger layui-btn-xs" onclick="out()">退出</button>
+                </div>
+            </div>
+        </div>
+        <div th:remove="${not #strings.isEmpty(session.username)}?all" style="position: fixed;z-index: 100;right: 20%;top:40%;display: none" id="register_div">
+            <center>
+                <h3 style="color: #FBFBFB">注册</h3>
+            </center>
+            <br>
+            <input type="text" id="register_username" onchange="checkUser()"  placeholder="请输入用户名" class="layui-input">
+            <br/>
+            <input type="text" id="register_password" placeholder="请输入密码" class="layui-input">
+            <br>
+            &nbsp;&nbsp;
+            <div class="layui-btn layui-btn-warm" onclick="register()">注册</div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="layui-btn" onclick="tologin()" >返回</div>
+        </div>
+        <div id="login_div" th:remove="${not #strings.isEmpty(session.username)}?all"  style="position: fixed;z-index: 100;right: 20%;top:40%;display: inline">
+            <form class="layui-form">
+                <center>
+                <h3 style="color: #FBFBFB">登录</h3>
+                </center>
+                <br>
+                <input class="layui-input" id="username" name="password" type="text" placeholder="请输入用户名">
+                <br/>
+                <input class="layui-input" id="password" name="password" type="text" placeholder="请输入密码">
+            </form>
+            <br/>
+            &nbsp;&nbsp;
+            <div class="layui-btn" onclick="login()" >登录</div>
+            &nbsp;&nbsp;&nbsp;
+            <div class="layui-btn layui-btn-warm" onclick="toregister()">注册</div>
+        </div>
+    </div>
+    <div class="layui-carousel" id="test1" >
+
+        <div carousel-item style="height: 100%">
+            <div>
+                <img src="" style="height: 100%;width: 100%;vertical-align:middle;"
+                     th:src="@{layui/images/mypic/3.jpg}">
+            </div>
+            <div>
+                <img src="" style="height: 100%;width: 100%;vertical-align:middle;"
+                     th:src="@{layui/images/mypic/4.jpeg}">
+            </div>
+            <div>
+                <img src="" style="height: 100%;width: 100%;vertical-align:middle;"
+                     th:src="@{layui/images/mypic/3.jpg}">
+            </div>
+            <div>
+                <img src="" style="height: 100%;width: 100%;vertical-align:middle;"
+                     th:src="@{layui/images/mypic/4.jpeg}">
+            </div>
+<!--            <div>-->
+<!--                <img src="" style="height: 100%;width: 100%;vertical-align:middle;"-->
+<!--                     th:src="@{layui/images/mypic/3.jpg}">-->
+<!--            </div>-->
+        </div>
+    </div>
+</div>
+<script src="/static/build/layui.js" th:src="@{layui/layui.js}"></script>
+<script src="" th:src="@{/jQuery/jquery-3.4.1.js}"></script>
+<script>
+    layui.use('carousel', function () {
+        var carousel = layui.carousel;
+        //建造实例
+        carousel.render({
+            elem: '#test1'
+            , width: '100%' //设置容器宽度
+            ,height: '100%'
+            //,full: true
+            , anim: 'fade'
+            , interval: 5000
+            , arrow: 'none'
+            , autoplay: true
+        });
+    });
+</script>
+<script>
+    function login() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var url = "[[@{/}]]";
+        $.ajax({
+            url: "[[@{/login?username=}]]" + username + "&&password=" + password,
+            type: "post",
+            success: function (data) {
+                if (data === "login_successful") {
+                    layui.use('layer', function(){
+                        var layer = layui.layer;
+                        layer.msg("登录成功", {icon: 1});
+                    });
+                    self.setInterval(function () {
+                        window.location.replace(url);
+                    },1000)
+                } else {
+                    alert("用户名或密码错误");
+                }
+            }
+        })
+    }
+</script>
+<script>
+    function checkUser() {
+        var username = $("#register_username").val();
+        $.ajax({
+            url:"[[@{/checkUser?username=}]]"+username,
+            type: "post",
+            success:function (data) {
+                if (data === "username_available") {
+                    layui.use('layer',function () {
+                        var layer = layui.layer;
+                        layer.msg('用户名可用！',{icon:1})
+                    })
+                }else if (data === "username_not_available"){
+                    layui.use('layer',function () {
+                    var layer = layui.layer;
+                    layer.msg('用户名已存在',function () {
+                    })
+                    })
+                }else{
+                    layui.use('layer',function () {
+                    var layer = layui.layer;
+                    layer.msg('服务器可能存在错误，请稍后再试',function (){
+                    })
+                    })
+                }
+            }
+        })
+    }
+</script>
+<script>
+    function toregister() {
+         document.getElementById("login_div").style.display = "none";
+         document.getElementById("register_div").style.display = "block";
+    }
+</script>
+<script>
+    function tologin() {
+        document.getElementById("login_div").style.display = "block";
+        document.getElementById("register_div").style.display = "none";
+    }
+</script>
+<script>
+    function register() {
+        let register_username = $("#register_username").val();
+        let register_password = $("#register_password").val();
+        var url = "[[@{/}]]";
+        $.ajax({
+            url: "[[@{/register?username=}]]" + register_username + "&&password=" + register_password,
+            type: "post",
+            success(data){
+                if (data === "register_fail"){
+                    layui.use('layer',function () {
+                        var layer = layui.layer;
+                        layer.msg('注册失败',function () {
+                        })
+                    })
+                }else if (data === "register_successful"){
+                    alert("注册成功");
+                    window.location.replace(url);
+                }
+            }
+        })
+    }
+</script>
+<script>
+    function out() {
+        var url = "[[@{/}]]";
+        $.ajax({
+            url: "[[@{/out}]]" ,
+            type: "post",
+            success(){
+                window.location.replace(url);
+            }
+        })
+    }
+</script>
+<script th:remove="${session.unlogin!=true}?all">
+    alert("请先登录");
+</script>
+<script>
+    function homeClicked() {
+        document.getElementById('home').classList.add('layui-this');
+    }
+    function over(){
+    document.getElementById('test1').style.height = '100%';
+    }
+
+    $(document).ready(function(){
+
+        over();
+
+    });
+
+    homeClicked();
+</script>
+</body>
+</html>
